@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <mvc:annotation-driven/>
+    <context:component-scan base-package="cn.com.simpleuse.*.controller"/>
+    
+    <!--<mvc:resources mapping="/MP_verify_JTPU0IBySjxjEA6t.txt" location="/MP_verify_JTPU0IBySjxjEA6t.txt"/>-->
+    <!--<mvc:resources mapping="/resources/**" location="/WEB-INF/resources/"/>-->
+
+    <!--<bean id="messageSource"-->
+          <!--class="org.springframework.context.support.ResourceBundleMessageSource">-->
+        <!--<property name="defaultEncoding" value="UTF-8"/>-->
+        <!--<property name="basenames">-->
+            <!--<set>-->
+                <!--<value>ValidatorMessages</value>-->
+            <!--</set>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">-->
+           <!--<property name="validationMessageSource" ref="messageSource"/>-->
+    <!--</bean>-->
+
+
+    <!--<bean id="multipartResolver"-->
+          <!--class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
+        <!--1048576 1M -->
+        <!--<property name="maxUploadSizePerFile" value="10485760"/>-->
+        <!--<property name="resolveLazily" value="true"/>-->
+    <!--</bean>-->
+
+
+    <!--<mvc:tiles-configurer>-->
+        <!--<mvc:definitions location="classpath:applicationContext-tiles.xml"/>-->
+    <!--</mvc:tiles-configurer>-->
+
+
+    <mvc:view-resolvers>
+        <!--<mvc:tiles view-class="org.springframework.web.servlet.view.tiles3.TilesView"/>-->
+        <!--<mvc:jsp prefix="/WEB-INF/views/" suffix=".jsp"/>-->
+        <mvc:content-negotiation>
+            <mvc:default-views>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+            </mvc:default-views>
+        </mvc:content-negotiation>
+    </mvc:view-resolvers>
+
+</beans>
