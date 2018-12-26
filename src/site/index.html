@@ -12,33 +12,44 @@
 <script src="js/config.js"></script>
 <script>
     if (!localStorage.getItem('mp_open_id')) {
-        // var params = (new URL(document.location)).searchParams;
-        var params = new URLSearchParams(document.location.search.substring(1));
-
+        var params = new URLSearchParams(location.search.substring(1));
+        var state = '';
         if (params.get('code') == null) {
             // snsapi_base,snsapi_userinfo
+            var url = location.origin + location.pathname;
+            if (params.has('state')){
+                state = params.get('state');
+                params.delete('state');
+            }
+            if (params.toString().length > 0) {
+                url += '?' + params.toString()
+            }
+            url += location.hash;
+
             $.get(MP_API_DOMAIN + '/mp_auth_uri',
                 {
-                    redirectUri: btoa(location.href),
+                    redirectUri: btoa(url),
                     scope: 'snsapi_base',
-                    state: ''
+                    state: state
                 },
                 function (data, status, xhr) {
                     if (data.code == 200) {
-                        location.href = data.data;
-                    } else {
-                        alert(data.msg);
+                        location.href = atob(data.data);
                     }
                 }, 'json');
         } else {
-            $.get(MP_API_DOMAIN + '/mp_auth_user_openid',
-                {
-                    code: params.get('code'),
-                    state: params.get('state')
-                },
+            $.get(MP_API_DOMAIN + '/mp_auth_user_openid?'+params.toString(),{},
                 function (data, status, xhr) {
                     if (data.code == 200) {
-                        localStorage.setItem('mp_open_id', data.data)
+                        localStorage.setItem('mp_open_id', data.data);
+                        params.delete('code');
+                        var url = location.origin + location.pathname;
+                        if (params.toString().length > 0) {
+                            url += '?' + params.toString()
+                        }
+                        url += location.hash;
+                        // $('#url').html(url);
+                        location.replace(url);
                     } else {
                         alert(data.msg);
                     }

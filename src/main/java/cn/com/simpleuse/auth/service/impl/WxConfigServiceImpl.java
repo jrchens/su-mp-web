@@ -1,6 +1,7 @@
 package cn.com.simpleuse.auth.service.impl;
 
 import cn.com.simpleuse.auth.service.WxConfigService;
+import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpEntity;
@@ -176,7 +177,7 @@ public class WxConfigServiceImpl implements WxConfigService {
     public String getMpWebRedirectUri(String appId, String redirectUri, String scope, String state) {
         try {
             String uri = new String(Base64Utils.decodeFromUrlSafeString(redirectUri));
-            return String.format("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect", appId, uri, scope, state);
+            return Base64Utils.encodeToString(String.format("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect", appId, uri, scope, state).getBytes(Charsets.UTF_8));
         } catch (Exception e) {
             logger.error("WxConfigServiceImpl getMpWebRedirectUri method error", e);
         }
