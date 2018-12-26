@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+
+    <title>Title</title>
+</head>
+<body>
+
+<script src="js/zepto.min.js"></script>
+<script src="js/config.js"></script>
+<script>
+    if (!localStorage.getItem('mp_open_id')) {
+        // var params = (new URL(document.location)).searchParams;
+        var params = new URLSearchParams(document.location.search.substring(1));
+
+        if (params.get('code') == null) {
+            // snsapi_base,snsapi_userinfo
+            $.get(MP_API_DOMAIN + '/mp_auth_uri',
+                {
+                    redirectUri: btoa(location.href),
+                    scope: 'snsapi_base',
+                    state: ''
+                },
+                function (data, status, xhr) {
+                    if (data.code == 200) {
+                        location.href = data.data;
+                    } else {
+                        alert(data.msg);
+                    }
+                }, 'json');
+        } else {
+            $.get(MP_API_DOMAIN + '/mp_auth_user_openid',
+                {
+                    code: params.get('code'),
+                    state: params.get('state')
+                },
+                function (data, status, xhr) {
+                    if (data.code == 200) {
+                        localStorage.setItem('mp_open_id', data.data)
+                    } else {
+                        alert(data.msg);
+                    }
+                }, 'json');
+        }
+    }
+
+</script>
+</body>
+</html>
